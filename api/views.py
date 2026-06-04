@@ -1,5 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+
 
 from .models import (
     TipoDocumento,
@@ -34,7 +37,12 @@ from .serializers import (
 )
 
 
+
+
 class BaseViewSet(viewsets.ModelViewSet):
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = '__all__'
+    ordering_fields = '__all__'
 
     def list(self, request):
         serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -143,6 +151,8 @@ class BaseViewSet(viewsets.ModelViewSet):
 # CATÁLOGOS
 # ==========================
 
+
+
 class TipoDocumentoViewSet(BaseViewSet):
     queryset = TipoDocumento.objects.filter(activo=True)
     serializer_class = TipoDocumentoSerializer
@@ -181,6 +191,9 @@ class CitaViewSet(BaseViewSet):
     serializer_class = CitaSerializer
 
 
+    
+
+
 # ==========================
 # MEDICAMENTOS
 # ==========================
@@ -216,6 +229,8 @@ class TratamientoMedicamentoViewSet(BaseViewSet):
 class FacturaViewSet(BaseViewSet):
     queryset = Factura.objects.filter(activo=True)
     serializer_class = FacturaSerializer
+
+
 
 
 class DetalleFacturaViewSet(BaseViewSet):
